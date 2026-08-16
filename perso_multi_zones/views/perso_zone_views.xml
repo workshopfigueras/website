@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_perso_zone_list" model="ir.ui.view">
+        <field name="name">perso.zone.list</field>
+        <field name="model">perso.zone</field>
+        <field name="arch" type="xml">
+            <list string="Zones de personnalisation" editable="bottom">
+                <field name="sequence" widget="handle"/>
+                <field name="zone"/>
+                <field name="zone_label"/>
+                <field name="type_contenu"/>
+                <field name="attachment_id" domain="[('res_model','=','sale.order')]"/>
+                <field name="texte"/>
+                <field name="technique"/>
+                <field name="largeur_mm"/>
+                <field name="hauteur_mm"/>
+                <field name="nb_couleurs"/>
+                <field name="prix_unitaire_ht"/>
+                <field name="commentaire_atelier"/>
+                <field name="currency_id" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_perso_zone_form" model="ir.ui.view">
+        <field name="name">perso.zone.form</field>
+        <field name="model">perso.zone</field>
+        <field name="arch" type="xml">
+            <form string="Zone de personnalisation">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="sale_order_line_id"/>
+                            <field name="zone"/>
+                            <field name="zone_label"/>
+                            <field name="type_contenu" widget="radio"/>
+                            <field name="attachment_id" invisible="type_contenu != 'logo'"/>
+                            <field name="texte" invisible="type_contenu != 'texte'"/>
+                        </group>
+                        <group>
+                            <field name="technique"/>
+                            <field name="largeur_mm"/>
+                            <field name="hauteur_mm"/>
+                            <field name="nb_couleurs" invisible="technique != 'broderie'"/>
+                            <field name="prix_unitaire_ht"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                    </group>
+                    <field name="commentaire_atelier" placeholder="Consignes atelier..."/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_perso_zone" model="ir.actions.act_window">
+        <field name="name">Zones de personnalisation</field>
+        <field name="res_model">perso.zone</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>
