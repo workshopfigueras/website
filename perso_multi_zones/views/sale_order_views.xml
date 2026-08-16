@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Bouton BAT + statut sur la commande, et onglet Personnalisation -->
+    <record id="view_order_form_perso" model="ir.ui.view">
+        <field name="name">sale.order.form.perso.zone</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_print_bat" type="object"
+                        class="oe_stat_button" icon="fa-print"
+                        invisible="perso_zone_count == 0">
+                    <field name="perso_zone_count" widget="statinfo" string="Zones perso"/>
+                </button>
+            </xpath>
+            <xpath expr="//field[@name='payment_term_id']" position="after">
+                <field name="perso_bat_status"/>
+            </xpath>
+            <xpath expr="//notebook" position="inside">
+                <page string="Personnalisation" name="perso_zones"
+                      invisible="perso_zone_count == 0">
+                    <field name="perso_zone_ids">
+                        <list editable="bottom">
+                            <field name="sale_order_line_id"/>
+                            <field name="zone_label"/>
+                            <field name="type_contenu"/>
+                            <field name="attachment_id"/>
+                            <field name="texte"/>
+                            <field name="technique"/>
+                            <field name="largeur_mm"/>
+                            <field name="hauteur_mm"/>
+                            <field name="nb_couleurs"/>
+                            <field name="prix_unitaire_ht"/>
+                            <field name="currency_id" column_invisible="1"/>
+                        </list>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Total marquage visible au niveau de la ligne -->
+    <record id="view_order_line_perso_total" model="ir.ui.view">
+        <field name="name">sale.order.line.perso.total</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='order_line']/list/field[@name='price_subtotal']" position="before">
+                <field name="perso_zone_count" optional="show" string="Zones"/>
+                <field name="perso_zones_total_ht" optional="show"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
