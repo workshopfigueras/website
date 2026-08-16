@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <!--
+      Repris de x_ws_config (Studio) : clefs `zone_config` et `price_matrix`.
+      NB: on NE reprend PAS les autres clefs de x_ws_config (google_reviews,
+      gammes) : elles ne concernent pas la personnalisation.
+      Le catalogue ci-dessous est la source de verite des zones (codes +
+      dimensions par defaut en mm). Le front Vercel doit s'y conformer
+      (cf. CONTRACT.md).
+    -->
+    <record id="param_zone_config" model="ir.config_parameter">
+        <field name="key">perso_multi_zones.zone_config</field>
+        <field name="value"><![CDATA[{
+  "version": 1,
+  "familles": {
+    "haut": {
+      "label": "T-shirt / Polo / Sweat",
+      "zones": [
+        {"code": "coeur_g",     "label": "Cœur (gauche)",       "w": 100, "h": 100},
+        {"code": "poitrine",    "label": "Poitrine centre",     "w": 280, "h": 200},
+        {"code": "dos_complet", "label": "Dos complet",         "w": 300, "h": 400},
+        {"code": "haut_dos",    "label": "Haut de dos / nuque", "w": 280, "h": 80},
+        {"code": "manche_g",    "label": "Manche gauche",       "w": 80,  "h": 200},
+        {"code": "manche_d",    "label": "Manche droite",       "w": 80,  "h": 200}
+      ]
+    },
+    "casquette": {
+      "label": "Casquette",
+      "zones": [
+        {"code": "casquette_front", "label": "Face avant", "w": 100, "h": 60}
+      ]
+    }
+  }
+}]]></field>
+    </record>
+
+    <record id="param_price_matrix" model="ir.config_parameter">
+        <field name="key">perso_multi_zones.price_matrix</field>
+        <field name="value"><![CDATA[{
+  "version": 2,
+  "_note": "Prix marquage HT FIXES par taille (non degressif). A confirmer par l'atelier.",
+  "buckets": {"petit": "<= 10x10 cm", "moyen": "<= 20x20 cm", "grand": "<= 30x30 cm"},
+  "techniques": {
+    "dtf":      {"petit": 1.25, "moyen": 2.50, "grand": 2.50},
+    "broderie": {"petit": 2.50, "moyen": 3.50, "grand": 4.50}
+  }
+}]]></field>
+    </record>
+</odoo>
