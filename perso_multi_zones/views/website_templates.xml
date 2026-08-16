@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--
+      Recap panier : liste chaque zone (visuel + prix HT) sous chaque ligne.
+      Rattachee au website WORK SHOP par le post_init_hook (website_id).
+      NB: l'ancre xpath ci-dessous cible le template panier standard. Si le
+      theme custom modifie fortement /shop/cart, verifier l'ancre au deploiement
+      (c'est le seul point "theme-dependant" du module).
+    -->
+    <template id="perso_zone_cart_recap" inherit_id="website_sale.cart"
+              name="Recap zones perso (panier)" active="True">
+        <xpath expr="//div[@id='o_cart_summary']" position="before">
+            <t t-set="ws_perso_order" t-value="website_sale_order"/>
+            <div t-if="ws_perso_order" class="mt-3">
+                <t t-foreach="ws_perso_order.order_line.filtered(lambda l: l.perso_zone_ids)"
+                   t-as="pline">
+                    <div class="border rounded p-2 mb-2">
+                        <strong t-field="pline.product_id.display_name"/>
+                        <ul class="mb-1">
+                            <li t-foreach="pline.perso_zone_ids" t-as="pz">
+                                <span t-esc="pz.zone_label or pz.zone"/> ·
+                                <span t-field="pz.technique"/> ·
+                                <t t-if="pz.type_contenu == 'logo'">
+                                    <span t-field="pz.file_name"/>
+                                </t>
+                                <t t-else="">« <span t-esc="pz.texte"/> »</t>
+                                — <span t-field="pz.prix_unitaire_ht"
+                                        t-options='{"widget": "monetary", "display_currency": pz.currency_id}'/> HT
+                            </li>
+                        </ul>
+                    </div>
+                </t>
+            </div>
+        </xpath>
+    </template>
+</odoo>
