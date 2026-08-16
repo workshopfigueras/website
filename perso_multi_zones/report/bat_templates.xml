@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_bat">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="order">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <h2>BAT de production — <span t-field="order.name"/></h2>
+                        <div class="row mb-3">
+                            <div class="col-6">
+                                <strong>Client :</strong> <span t-field="order.partner_id.name"/><br/>
+                                <strong>Statut BAT :</strong> <span t-field="order.perso_bat_status"/>
+                            </div>
+                            <div class="col-6 text-end">
+                                <strong>Date :</strong> <span t-field="order.date_order" t-options='{"widget": "date"}'/>
+                            </div>
+                        </div>
+
+                        <t t-foreach="order.order_line.filtered(lambda l: l.perso_zone_ids)" t-as="line">
+                            <div style="border:1px solid #ccc;border-radius:6px;padding:8px;margin-bottom:12px;">
+                                <h4 style="margin:0 0 6px 0;">
+                                    <span t-field="line.product_id.display_name"/>
+                                    — <span t-field="line.product_uom_qty"/> pce(s)
+                                    <span class="float-end">
+                                        Marquage HT : <span t-field="line.perso_zones_total_ht"
+                                            t-options='{"widget": "monetary", "display_currency": line.currency_id}'/>
+                                    </span>
+                                </h4>
+                                <table class="table table-sm table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Zone (position)</th>
+                                            <th>Technique</th>
+                                            <th>Dimensions</th>
+                                            <th>Couleurs</th>
+                                            <th>Visuel / Texte</th>
+                                            <th class="text-end">Prix HT</th>
+                                            <th>Consignes atelier</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr t-foreach="line.perso_zone_ids" t-as="zone">
+                                            <td>
+                                                <strong t-esc="zone.zone_label or zone.zone"/>
+                                                <br/><small t-field="zone.zone"/>
+                                            </td>
+                                            <td t-field="zone.technique"/>
+                                            <td>
+                                                <span t-esc="zone.largeur_mm"/> ×
+                                                <span t-esc="zone.hauteur_mm"/> mm
+                                            </td>
+                                            <td>
+                                                <span t-if="zone.technique == 'broderie'" t-esc="zone.nb_couleurs"/>
+                                                <span t-else="">—</span>
+                                            </td>
+                                            <td>
+                                                <img t-if="zone.type_contenu == 'logo' and zone.attachment_id"
+                                                     t-att-src="image_data_uri(zone.attachment_id.datas)"
+                                                     style="max-height:70px;max-width:120px;"/>
+                                                <div t-if="zone.type_contenu == 'logo' and zone.attachment_id">
+                                                    <small t-field="zone.file_name"/>
+                                                </div>
+                                                <strong t-if="zone.type_contenu == 'texte'"
+                                                        t-esc="zone.texte"/>
+                                            </td>
+                                            <td class="text-end">
+                                                <span t-field="zone.prix_unitaire_ht"
+                                                      t-options='{"widget": "monetary", "display_currency": zone.currency_id}'/>
+                                            </td>
+                                            <td t-field="zone.commentaire_atelier"/>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </t>
+
+                        <p class="text-muted">
+                            <small>Tous les prix sont en HT. Un visuel par zone —
+                            verifier chaque affectation fichier ↔ zone avant production.</small>
+                        </p>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>
