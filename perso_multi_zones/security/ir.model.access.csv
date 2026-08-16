@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_perso_zone_salesman,perso.zone.salesman,model_perso_zone,sales_team.group_sale_salesman,1,1,1,1
+access_perso_zone_manager,perso.zone.manager,model_perso_zone,sales_team.group_sale_manager,1,1,1,1
+access_perso_zone_portal,perso.zone.portal,model_perso_zone,base.group_portal,1,0,0,0
