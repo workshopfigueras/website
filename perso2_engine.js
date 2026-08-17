@@ -314,7 +314,7 @@ try{
  +'</div>'
  +'<div class="pt2-ctr">'
  +'<div class="pt2-step"><h4>'+T('h_zones')+'</h4><p class="pt2-hint">'+T('zones_hint')+'</p><div class="pt2-zones" id="pt2-zones"></div></div>'
- +'<div class="pt2-step"><h4>'+T('h_logos')+'</h4><label class="pt2-up">'+T('up')+'<input type="file" id="pt2-file" accept="'+ACCEPT+'"/></label><p class="pt2-reco">'+T('reco')+'</p><label class="pt2-useall"><input type="checkbox" id="pt2-useall"/><span>'+T('use_others')+'</span></label><div class="pt2-lib" id="pt2-lib"></div></div>'
+ +'<div class="pt2-step"><h4>'+T('h_logos')+'</h4><label class="pt2-up">'+T('up')+'<input type="file" id="pt2-file" accept="'+ACCEPT+'"/></label><p class="pt2-reco">'+T('reco')+'</p><label class="pt2-useall"><input type="checkbox" id="pt2-useall"/><span>'+T('use_others')+'</span></label><div class="pt2-lib" id="pt2-lib"></div><div class="pt2-size" id="pt2-sizerow" style="display:none"><span>'+T('size')+'</span><input type="range" id="pt2-scale" min="20" max="140" value="60"/></div></div>'
  +'<div class="pt2-step"><h4>'+T('h_tech')+'</h4><div class="pt2-techs" id="pt2-techs"></div></div>'
  +'<div class="pt2-step"><h4>'+T('h_valid')+'</h4>'
  +'<div class="pt2-recap" id="pt2-recap"></div>'
@@ -333,6 +333,8 @@ try{
  var mk=ov.querySelector('#pt2-mk'),stage=ov.querySelector('#pt2-stage'),viewsEl=ov.querySelector('#pt2-views');
  var ctaBtn=ov.querySelector('#pt2-cta'),doneEl=ov.querySelector('#pt2-done'),recapEl=ov.querySelector('#pt2-recap');
  var devisBox=ov.querySelector('#pt2-devisbox'),libEl=ov.querySelector('#pt2-lib'),useAll=ov.querySelector('#pt2-useall');
+ var sizeRow=ov.querySelector('#pt2-sizerow'),scaleInput=ov.querySelector('#pt2-scale');
+ scaleInput.oninput=function(e){var am=state.activeMark?logoMarkById(state.activeMark):null;if(!am)return;am.scale=parseInt(e.target.value,10);var wrap=stage.querySelector('.pt2-mark[data-m="'+am.id+'"]');if(wrap){var im=wrap.querySelector('img');if(im)im.style.width=am.scale+'%';}};
 
  /* ---- zones (multi-select) ---- */
  var zc=ov.querySelector('#pt2-zones');
@@ -424,7 +426,7 @@ try{
      var rz=document.createElement('div');rz.className='rz';
      var del=document.createElement('button');del.type='button';del.className='del';del.innerHTML='&times;';
      wrap.appendChild(img);wrap.appendChild(rz);wrap.appendChild(del);stage.appendChild(wrap);
-     wrap.addEventListener('pointerdown',function(e){if(e.target===rz||e.target===del)return;state.activeMark=m.id;renderStage();renderLib();});
+     wrap.addEventListener('pointerdown',function(e){if(e.target===rz||e.target===del)return;state.activeMark=m.id;renderStage();renderLib();updateSizeRow();});
      del.addEventListener('click',function(e){e.stopPropagation();state.marks=state.marks.filter(function(x){return x!==m;});if(state.activeMark===m.id)state.activeMark=null;syncAll();});
      bindDrag(img,wrap,m);bindResize(rz,m);
    });
@@ -474,7 +476,8 @@ try{
    var ok=base&&(!t||t.mode!=='devis'||contactValid());
    ctaBtn.disabled=!ok;updateSteps();
  }
- function syncAll(){[].forEach.call(zc.children,function(c){c.classList.toggle('on',!!markForZone(c.getAttribute('data-k')));});refreshZonePrices();renderViews();renderStage();renderLib();renderRecap();recompute();}
+ function syncAll(){[].forEach.call(zc.children,function(c){c.classList.toggle('on',!!markForZone(c.getAttribute('data-k')));});refreshZonePrices();renderViews();renderStage();renderLib();renderRecap();updateSizeRow();recompute();}
+ function updateSizeRow(){var am=state.activeMark?logoMarkById(state.activeMark):null;if(am&&am.logoId){sizeRow.style.display='flex';scaleInput.value=am.scale;}else{sizeRow.style.display='none';}}
 
  ov.querySelector('#pt2-bat').onchange=function(e){state.bat=e.target.checked;recompute();};
  ['#pt2-cname','#pt2-cemail','#pt2-cphone'].forEach(function(sel){ov.querySelector(sel).addEventListener('input',recompute);});
