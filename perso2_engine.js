@@ -561,8 +561,9 @@ try{
      if(t.mode==='devis'){showConfirm(T('devis_ok'),'N°',r.leadId,T('devis_ok_txt').replace('%r',r.ref));}
    }).catch(function(e){
      busy=false;ctaBtn.disabled=false;ctaBtn.textContent=old;
+     if(window.console)console.warn('PT2 doPay error',e);
      doneEl.style.display='block';doneEl.style.background='#fdecec';doneEl.style.borderColor='#c0392b';doneEl.style.color='#7a1f16';
-     doneEl.innerHTML=T('err').replace('%w',t.mode==='pay'?'panier':'devis');
+     doneEl.innerHTML=T('err').replace('%w',t.mode==='pay'?'panier':'devis')+'<br><small style="color:#a33">détail : '+((e&&e.message)?e.message:String(e))+'</small>';
    });
  });
 
