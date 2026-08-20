@@ -57,7 +57,10 @@ try{
  var C={jaune:'#F5C518',noir:'#1A1A1A'};
 
  var mdata=document.getElementById('moq-data');
- var MOQ=mdata?(parseInt(mdata.getAttribute('data-moq'))||50):50;
+ // MOQ par vêtement (détecté via data-mock-face du div #pt2-data) : Sweat=10 ; T-shirt & Polo=20
+ var __pd=document.getElementById('pt2-data');
+ var __mf=__pd?__pd.getAttribute('data-mock-face'):null;
+ var MOQ=(__mf==='614')?10:20;
  function langCode(){var m=location.pathname.match(/^\/(fr|es_ES|ca_ES)(\/|$)/);if(!m)return 'fr';return m[1]==='es_ES'?'es':(m[1]==='ca_ES'?'ca':'fr');}
  function langPfx(){var m=location.pathname.match(/^\/(fr|es_ES|ca_ES)(\/|$)/);return m?('/'+m[1]):'';}
  function csrfTok(){return (window.odoo&&window.odoo.csrf_token)||(document.querySelector('input[name=csrf_token]')||{}).value||'';}
